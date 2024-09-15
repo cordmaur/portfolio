@@ -1,0 +1,22 @@
+name: Daily Selenium Scraping
+
+on:
+  schedule:
+    # Run every day at 11:00 AM (UTC)
+    - cron: '00 11 * * *'
+
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    container:
+      image: infologistix/docker-selenium-python:3.10
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Run Selenium scraper
+      run: python Dashboard/test_dependencies.py
