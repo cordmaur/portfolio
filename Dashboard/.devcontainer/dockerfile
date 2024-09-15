@@ -1,0 +1,12 @@
+# Use the base image
+FROM infologistix/docker-selenium-python:3.10
+
+# Expose port 6000 for X11 forwarding
+EXPOSE 6000
+
+# Install x11-apps
+RUN apt-get update && \
+    apt-get install -y x11-apps
+
+# # Start the Selenium server (adjust as needed based on your setup)
+# CMD ["selenium-server"]
