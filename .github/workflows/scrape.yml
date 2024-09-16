@@ -20,3 +20,18 @@ jobs:
 
     - name: Run Selenium scraper
       run: python Dashboard/test_dependencies.py
+
+    - name: Set up date for file
+      id: date
+      run: echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
+
+    - name: Display file name for debugging purpose
+      run: echo Dashboard/data/portfolio_${{ env.DATE }}.json
+
+    - name: Commit and push JSON file
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add Dashboard/data/portfolio_${{ env.DATE }}.json
+        git commit -m "Add portfolio data for ${{ env.DATE }}"
+        git push
