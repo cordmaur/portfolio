@@ -20,7 +20,6 @@ portfolio = pd.read_csv(
 )[columns.keys()]
 portfolio = portfolio.rename(columns=columns)
 portfolio["Qty"] = portfolio["Qty"].astype("int")
-portfolio["Volume"] = portfolio["Qty"] * portfolio["Price"]
 portfolio["AvgPrice"] = portfolio["AvgPrice"].round(2)
 
 print(len(portfolio))
@@ -38,12 +37,13 @@ alternate_tickers = {
     "ITSA3": {"ticker": "ITSA4"},
     "SANB3": {"ticker": "SANB11", "factor": 0.5},
 }
-results = yahoo.get_tickers(
-    portfolio["Ticker"].iloc[:2], alternate_tickers=alternate_tickers
-)
-results = results.drop(columns="quote")
+results = yahoo.get_tickers(portfolio["Ticker"], alternate_tickers=alternate_tickers)
 
 portfolio = pd.concat([portfolio.set_index("Ticker"), results], axis=1)
+portfolio["Price"] = portfolio["quote"]
+portfolio = portfolio.drop(columns="quote")
+portfolio["Volume"] = portfolio["Qty"] * portfolio["Price"]
+
 portfolio["analists"] = portfolio["analists"].replace("", 0).fillna(0).astype("int")
 
 portfolio = portfolio.replace("", np.nan)

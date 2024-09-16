@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+
+    <script src="portfolio.js"></script>
+
+    <!-- Include the Tabulator library -->
+    <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+</head>
+
+<body>
+    <div id="ref_date">Reference date: </div>
+    <div id="portfolio-table"></div>
+
+    <script>
+        function writeTable(portfolioData) {
+            // Create the stars column
+            const manipulatedData = portfolioData.map((item) => {
+                return {
+                    ...item,
+                    stars: 6 - item.recomendation,
+                };
+            });
+
+            const scale = d3.scaleSequential()
+                .domain([1, 5])
+                .interpolator(d3.interpolateRgb("#FF5555", "#AAFFAA"));
+
+            function getColor(recommendation) {
+                return scale(recommendation);
+            }
+
+            // Create a new Tabulator instance
+            const table = new Tabulator("#portfolio-table", {
+                data: manipulatedData, // Pass in the portfolio data
+                // autoColumns: true,
+                columns: [
+                    { title: "Stock", field: "Stock" }, // Note: we'll need to transform the data to include a "stock" field
+                    { title: "Avg Price", field: "AvgPrice" },
+                    // { title: "Qty", field: "Qty" },
+                    // { title: "Volume", field: "Volume" },
+                    { title: "Price", field: "Price" },
+                    { title: "Low", field: "low" },
+                    { title: "Mean", field: "mean" },
+                    { title: "High", field: "high" },
+                    { title: "Upside", field: 'Upside', sorter: 'number' },
+                    { title: "Buy(1)/Sell(5)", field: "recomendation" },
+                    {
+                        title: "Buy(1)/Sell(5)", field: "stars", formatter: 'progress',
+                        formatterParams: { min: 1, max: 5, color: getColor }
+                    },
+                    { title: "Recommendation", field: "stars", formatter: "star" },
+                    { title: "Analysts", field: "analists" },
+                    // { title: "Date", field: "Date" },
+                ],
+                // rowFormatter: function (row) {
+                //     const recommendation = row.getData().recomendation;
+                //     const color = getColor(recommendation);
+                //     row.getElement().style.backgroundColor = color;
+                // },
+            });
+        }
+    </script>
+
+    <script>
+        const today = new Date().toISOString().slice(0, 10);
+        document.getElementById('ref_date').innerHTML = `Reference date: ${today}`;
+
+        // fetch the portfolio data into a json object 
+        // from: https://raw.githubusercontent.com/cordmaur/portfolio/main/Dashboard/data/portfolio_20240916.json
+        base_url = 'https://raw.githubusercontent.com/cordmaur/portfolio/main/Dashboard/data/'
+        fname = `portfolio_${today.replace(/-/g, '')}.json`
+
+        fetch(base_url + fname)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Finished fetching data')
+                writeTable(data)
+            });
+
+
+
+        // console.log('Drawing table')
+        // writeTable(portfolioData)
+
+
+
+    </script>
+
+</body>
+
+</html>
