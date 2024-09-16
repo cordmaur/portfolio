@@ -21,6 +21,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    - name: Set up Git safe directory
+      run: git config --global --add safe.directory /__w/portfolio/portfolio
+
     - name: Run Selenium scraper
       run: python Dashboard/scrape_yahoo.py
 
