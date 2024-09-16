@@ -19,7 +19,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Run Selenium scraper
-      run: python Dashboard/test_dependencies.py
+      run: python Dashboard/scrape_yahoo.py
 
     - name: Set up date for file
       id: date
