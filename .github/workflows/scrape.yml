@@ -15,6 +15,9 @@ jobs:
       image: infologistix/docker-selenium-python:3.10
 
     steps:
+    - name: Install Git
+      run: apt-get update && apt-get install -y git
+
     - name: Checkout repository
       uses: actions/checkout@v3
 
