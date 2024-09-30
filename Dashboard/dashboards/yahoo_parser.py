@@ -74,7 +74,7 @@ class YahooParser:
         # get the results
         results = {
             result: self.page.get_value(
-                YahooParser.elements[result], wait_time=0.0, dont_wait=False
+                YahooParser.elements[result], wait_time=1.0, dont_wait=False
             ).replace(",", ".")
             for result in YahooParser.results
         }

@@ -2,12 +2,14 @@
 
 import os
 from typing import Optional
+from datetime import datetime
 from time import sleep
 from pathlib import Path
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait  # type: ignore
+from selenium.webdriver.support.ui import WebDriverWait  
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
 
 # add comments to the SeleniumPage class
 
@@ -129,12 +131,26 @@ class SeleniumPage:
             str: The text value of the element.
         """
         sleep(wait_time)
+        time = datetime.now()
 
-        if dont_wait:
-            if not self.element_exists(element=element, by=by):
-                return ""
+        try:
+            if dont_wait:
+                if not self.element_exists(element=element, by=by):
+                    return ""
 
-        el = self._driver.find_element(by=by, value=element)
+            el = WebDriverWait(self._driver, 10).until(
+                EC.presence_of_element_located((by, element))
+            )
+            # el = self._driver.find_element(by=by, value=element)
+
+            delta = datetime.now() - time
+            print(f"Elment {element} loaded in {delta}")
+
+        except NoSuchElementException:
+            delta = datetime.now() - time
+            print(f"Error: Element {element} NOT loaded in {delta}")
+            raise ValueError(f"Failed loading {element} in {delta}")
+
         return el.text
 
     def scroll_down(self, steps: int = 1, height: int = 1000, sleep_time: float = 0.5):
