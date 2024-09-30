@@ -20,7 +20,8 @@
 		// "source=D:/OneDrive/Trabalho/SOE/COVEC/RelatoriosChuva/reports_folder,target=/workspaces/reports_folder,type=bind"
 	],
 	"containerEnv": {
-		"DISPLAY": "${localhost:0}"
+		// Point the DISPLAY to the host's display. An X server must be running on host. 
+		"DISPLAY": "host.docker.internal:0"
 	},
 	// "runArgs": [
 	// 	"--memory=30g",

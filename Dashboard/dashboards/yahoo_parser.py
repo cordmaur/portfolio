@@ -68,7 +68,7 @@ class YahooParser:
         self.page.get(url)
 
         # scroll all way down
-        self.page.scroll_down(2, height=1000)
+        self.page.scroll_down(2, height=1000, sleep_time=2.0)
 
         # get the results
         results = {

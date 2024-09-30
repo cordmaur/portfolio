@@ -137,7 +137,7 @@ class SeleniumPage:
         el = self._driver.find_element(by=by, value=element)
         return el.text
 
-    def scroll_down(self, steps: int = 1, height: int = 1000):
+    def scroll_down(self, steps: int = 1, height: int = 1000, sleep_time: float = 0.5):
         """
         Scrolls down a webpage by executing a JavaScript script.
 
@@ -150,7 +150,7 @@ class SeleniumPage:
         """
         for i in range(steps):
             self._driver.execute_script(f"window.scrollTo({i*height}, {(i+1)*height});")
-            sleep(0.5)
+            sleep(sleep_time)
 
     def element_exists(self, element: str, by: str = By.XPATH):
         """
