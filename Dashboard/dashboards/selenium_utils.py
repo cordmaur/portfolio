@@ -146,7 +146,7 @@ class SeleniumPage:
             delta = datetime.now() - time
             print(f"Elment {element} loaded in {delta}")
 
-        except NoSuchElementException:
+        except Exception as e:
             delta = datetime.now() - time
             print(f"Error: Element {element} NOT loaded in {delta}")
             raise ValueError(f"Failed loading {element} in {delta}")

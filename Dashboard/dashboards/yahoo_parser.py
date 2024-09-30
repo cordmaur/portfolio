@@ -64,12 +64,16 @@ class YahooParser:
         if ticker.split(".")[-1] != "SA":
             ticker = ticker + ".SA"
 
+        time = datetime.now()
+
         # open the ticker quotes page
         url = YahooParser.url + ticker
         self.page.get(url)
+        print(f'Openend: {url} - {datetime.now() - time}')
 
         # scroll all way down
         self.page.scroll_down(2, height=1000, sleep_time=1.0)
+        print(f'Scrolled down - {datetime.now() - time}')
 
         # get the results
         results = {
