@@ -3,11 +3,12 @@
 This module contains a class YahooParser to parse the recomendations from Yahoo Finance.
 
 """
-
+from datetime import datetime
 import pandas as pd
 
-from .selenium_utils import SeleniumPage
 from ast import literal_eval
+
+from .selenium_utils import SeleniumPage
 
 
 class YahooParser:
@@ -68,12 +69,12 @@ class YahooParser:
         self.page.get(url)
 
         # scroll all way down
-        self.page.scroll_down(2, height=1000, sleep_time=2.0)
+        self.page.scroll_down(2, height=1000, sleep_time=1.0)
 
         # get the results
         results = {
             result: self.page.get_value(
-                YahooParser.elements[result], wait_time=0.0, dont_wait=True
+                YahooParser.elements[result], wait_time=0.0, dont_wait=False
             ).replace(",", ".")
             for result in YahooParser.results
         }
@@ -107,6 +108,9 @@ class YahooParser:
         and analists, with the option to apply a factor to the results.
         """
 
+        print(f"Fetching ticker {ticker}")
+        start = datetime.now()
+
         if alternate_ticker is not None:
             ticker = alternate_ticker["ticker"]
 
@@ -116,6 +120,9 @@ class YahooParser:
             for result in ["low", "mean", "high", "quote"]:
                 results[result] = results[result] * alternate_ticker["factor"]
 
+        delta = datetime.now() - start
+        print(f'Elapsed time: {str(delta)}')
+        print(results)
         return results
 
     def get_tickers(
@@ -142,7 +149,6 @@ class YahooParser:
         retry = 3
         for ticker in tickers:
             # try to fetch the ticker multiple times
-            print(f"Fetching ticker {ticker}")
             retry = 0
 
             while retry < retries:
